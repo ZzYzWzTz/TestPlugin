@@ -3,14 +3,11 @@ name: CMake
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  workflow_dispatch: # 允许你手动在网页上点按钮触发编译
+  workflow_dispatch:
 
 jobs:
   build-macos:
-    runs-on: macos-14 # 使用最新版的 macOS 虚拟机
-
+    runs-on: macos-14
     steps:
     - uses: actions/checkout@v4
 
@@ -21,27 +18,24 @@ jobs:
         key: ${{ runner.os }}-libs-${{ hashFiles('CMakeLists.txt') }}
 
     - name: Configure CMake
-      # 强制生成通用二进制 (支持 Intel 和 Apple Silicon)
-      run: cmake --preset default -D CMAKE_OSX_ARCHITECTURES="x86_64;arm64"
+      # 不用 --preset，直接指定源目录和构建目录
+      run: cmake -B build -D CMAKE_BUILD_TYPE=Release -D CMAKE_OSX_ARCHITECTURES="x86_64;arm64"
 
     - name: Build
-      run: cmake --build --preset default
+      run: cmake --build build --config Release
 
     - name: Upload Mac Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: Mac-AU-and-VST3
-        # 这里抓取编译生成的 AU (.component) 和 VST3
         path: |
-          build/AudioPlugin_artefacts/**/*.component
-          build/AudioPlugin_artefacts/**/*.vst3
+          build/**/*.component
+          build/**/*.vst3
 
   build-windows:
     runs-on: windows-latest
-
     steps:
     - uses: ilammy/msvc-dev-cmd@v1
-
     - uses: actions/checkout@v4
 
     - name: Cache dependencies
@@ -51,13 +45,13 @@ jobs:
         key: ${{ runner.os }}-libs-${{ hashFiles('CMakeLists.txt') }}
 
     - name: Configure CMake
-      run: cmake --preset vs2022
+      run: cmake -B build -D CMAKE_BUILD_TYPE=Release
 
     - name: Build
-      run: cmake --build --preset vs2022 --config Release
+      run: cmake --build build --config Release
 
     - name: Upload Windows Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: Windows-VST3
-        path: build/AudioPlugin_artefacts/**/*.vst3
+        path: build/**/*.vst3
