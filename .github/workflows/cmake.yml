@@ -9,16 +9,17 @@ jobs:
   build-macos:
     runs-on: macos-14
     steps:
-    # 关键修复：加上 submodules: recursive，让云端自动拉取 JUCE
     - uses: actions/checkout@v4
-      with:
-        submodules: recursive 
 
     - name: Cache dependencies
       uses: actions/cache@v4
       with:
         path: libs
         key: ${{ runner.os }}-libs-${{ hashFiles('CMakeLists.txt') }}
+
+    # 新增：手动克隆 JUCE 到 libs/juce 目录
+    - name: Clone JUCE
+      run: git clone --depth 1 --branch 8.0.12 https://github.com/juce-framework/JUCE.git libs/juce
 
     - name: Configure CMake
       run: cmake -B build -D CMAKE_BUILD_TYPE=Release -D CMAKE_OSX_ARCHITECTURES="x86_64;arm64"
@@ -38,17 +39,17 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: ilammy/msvc-dev-cmd@v1
-    
-    # 关键修复：Windows 也需要拉取子模块
     - uses: actions/checkout@v4
-      with:
-        submodules: recursive
 
     - name: Cache dependencies
       uses: actions/cache@v4
       with:
         path: libs
         key: ${{ runner.os }}-libs-${{ hashFiles('CMakeLists.txt') }}
+
+    # 新增：手动克隆 JUCE
+    - name: Clone JUCE
+      run: git clone --depth 1 --branch 8.0.12 https://github.com/juce-framework/JUCE.git libs/juce
 
     - name: Configure CMake
       run: cmake -B build -D CMAKE_BUILD_TYPE=Release
