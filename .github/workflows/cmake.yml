@@ -17,9 +17,11 @@ jobs:
         path: libs
         key: ${{ runner.os }}-libs-${{ hashFiles('CMakeLists.txt') }}
 
-    # 新增：手动克隆 JUCE 到 libs/juce 目录
     - name: Clone JUCE
       run: git clone --depth 1 --branch 8.0.12 https://github.com/juce-framework/JUCE.git libs/juce
+
+    - name: Clone googletest
+      run: git clone --depth 1 --branch v1.17.0 https://github.com/google/googletest.git libs/googletest
 
     - name: Configure CMake
       run: cmake -B build -D CMAKE_BUILD_TYPE=Release -D CMAKE_OSX_ARCHITECTURES="x86_64;arm64"
@@ -47,9 +49,11 @@ jobs:
         path: libs
         key: ${{ runner.os }}-libs-${{ hashFiles('CMakeLists.txt') }}
 
-    # 新增：手动克隆 JUCE
     - name: Clone JUCE
       run: git clone --depth 1 --branch 8.0.12 https://github.com/juce-framework/JUCE.git libs/juce
+
+    - name: Clone googletest
+      run: git clone --depth 1 --branch v1.17.0 https://github.com/google/googletest.git libs/googletest
 
     - name: Configure CMake
       run: cmake -B build -D CMAKE_BUILD_TYPE=Release
