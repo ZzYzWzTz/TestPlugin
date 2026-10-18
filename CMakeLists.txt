@@ -23,6 +23,9 @@ set(CMAKE_OSX_ARCHITECTURES
     CACHE STRING "" FORCE
 )
 
+set(FETCHCONTENT_SOURCE_DIR_JUCE "${CMAKE_CURRENT_SOURCE_DIR}/libs/juce")
+set(FETCHCONTENT_SOURCE_DIR_GOOGLETEST "${CMAKE_CURRENT_SOURCE_DIR}/libs/googletest")
+
 # Sets a few variables, like PROJECT_NAME. VERSION is needed by JUCE.
 project(AudioPlugin)
 
@@ -91,7 +94,7 @@ endif()
 juce_add_plugin(
   AudioPlugin
   COMPANY_NAME
-  "MyCompany" # change this
+  "Zye_Wayt" # change this
   IS_SYNTH
   FALSE # may change this
   NEEDS_MIDI_INPUT
@@ -103,14 +106,13 @@ juce_add_plugin(
   PLUGIN_CODE
   Expl # change this (for max compatibility, first letter must be uppercase, remaining lowercase)
   FORMATS
-  AAX
   AU
   Standalone
   VST3
   PRODUCT_NAME
-  "YourPluginName" # change this
+  "Test_Gain" # change this
   VERSION
-  0.0.0 # 0.0.0 forces AU host to always rescan the plugin. Change this before releasing
+  0.0.1 # 0.0.0 forces AU host to always rescan the plugin. Change this before releasing
   COPY_PLUGIN_AFTER_BUILD
   FALSE # Changing this to TRUE will enable automatic copying of the built plugin formats
         # to correct directories on your system. The directories must exist, though
