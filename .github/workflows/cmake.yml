@@ -9,7 +9,10 @@ jobs:
   build-macos:
     runs-on: macos-14
     steps:
+    # 关键修复：加上 submodules: recursive，让云端自动拉取 JUCE
     - uses: actions/checkout@v4
+      with:
+        submodules: recursive 
 
     - name: Cache dependencies
       uses: actions/cache@v4
@@ -18,7 +21,6 @@ jobs:
         key: ${{ runner.os }}-libs-${{ hashFiles('CMakeLists.txt') }}
 
     - name: Configure CMake
-      # 不用 --preset，直接指定源目录和构建目录
       run: cmake -B build -D CMAKE_BUILD_TYPE=Release -D CMAKE_OSX_ARCHITECTURES="x86_64;arm64"
 
     - name: Build
@@ -36,7 +38,11 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: ilammy/msvc-dev-cmd@v1
+    
+    # 关键修复：Windows 也需要拉取子模块
     - uses: actions/checkout@v4
+      with:
+        submodules: recursive
 
     - name: Cache dependencies
       uses: actions/cache@v4
